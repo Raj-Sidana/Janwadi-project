@@ -31,6 +31,21 @@ router.post('/signin', async (req, res) => {
   try {
     const { identifier, password } = req.body;
 
+    // Check for admin credentials
+    if (identifier.toLowerCase() === 'admin@1.jw' && password === 'Admin123') {
+      const token = jwt.sign({ userId: 'admin', isAdmin: true }, process.env.JWT_SECRET, { expiresIn: '7d' });
+      return res.json({
+        message: 'Admin login successful',
+        token,
+        user: {
+          id: 'admin',
+          name: 'Admin',
+          email: 'admin@1.jw',
+          isAdmin: true,
+        }
+      });
+    }
+
     // Find user by email or mobile
     const user = await User.findOne({
       $or: [
@@ -64,6 +79,7 @@ router.post('/signin', async (req, res) => {
         city: user.city,
         address: user.address,
         pincode: user.pincode,
+        isAdmin: false,
       }
     });
   } catch (error) {

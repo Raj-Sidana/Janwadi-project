@@ -1,7 +1,9 @@
-# Backend Implementation TODO
+# TODO: Add Search Bar for Complaints by ID in Admin Panel
 
-- [x] Create .env file with MONGO_URI and JWT_SECRET
-- [x] Create models/User.js for Mongoose schema
-- [x] Create routes/auth.js for signup and signin endpoints
-- [x] Create server.js as main Express server
-- [x] Update package.json scripts to add "start": "node server.js"
+## Steps to Complete:
+- [x] Add `searchId` state variable to AdminPanel.jsx
+- [x] Add search input field above the complaints table
+- [x] Implement filtering logic for complaints based on searchId
+- [x] Update table rendering to use filtered complaints
+- [x] Ensure search is case-insensitive and supports partial matches
+- [x] Test the search functionality
