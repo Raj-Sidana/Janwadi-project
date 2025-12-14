@@ -14,7 +14,7 @@ const complaintSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['infrastructure', 'sanitation', 'utilities', 'public_safety', 'environment', 'other'],
+    enum: ['infrastructure', 'sanitation', 'utilities', 'safety', 'transportation', 'environment', 'other'],
   },
   status: {
     type: String,
@@ -46,6 +46,15 @@ const complaintSchema = new mongoose.Schema({
     required: true,
     match: /^[0-9]{6}$/,
   },
+  contactPhone: {
+    type: String,
+    trim: true,
+  },
+  contactEmail: {
+    type: String,
+    trim: true,
+    match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  },
   photoUrl: {
     type: String,
     trim: true,
@@ -53,7 +62,7 @@ const complaintSchema = new mongoose.Schema({
   submittedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    // required: true, // Made optional for guest complaints
   },
 }, {
   timestamps: true,

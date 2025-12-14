@@ -77,7 +77,7 @@ router.post('/', upload.single('photo'), async (req, res) => {
         .status(400)
         .json({ message: error.message || 'File upload failed' });
     }
-    res.status(500).json({ message: 'Failed to register complaint' });
+    res.status(500).json({ message: 'Failed to register complaint', error: error.message });
   }
 });
 
