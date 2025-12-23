@@ -4,7 +4,9 @@ import Regestration from './components/Registration/Regestration.jsx'
 import {Route, Routes, Navigate} from 'react-router-dom'
 import SignUp from './components/Registration/SignUp.jsx'
 import ComplaintRegistration from './components/Complaint/ComplaintRegistration.jsx'
+import ProblemStatus from './components/Complaint/ProblemStatus.jsx'
 import Profile from './components/Profile/Profile.jsx'
+
 import AdminPanel from './components/Admin/AdminPanel.jsx'
 
 
@@ -66,7 +68,9 @@ const App = () => {
         <Route path='/SignIn' element={<Regestration/>} />
         <Route path='/SignUp' element={<SignUp/>}/>
         <Route path='/RegisterProblem' element={<ComplaintRegistration/>}/>
+        <Route path='/ProblemStatus' element={<ProblemStatus/>}/>
         <Route path='/profile' element={<Profile/>}/>
+
         <Route path='/admin' element={<AdminPanel/>}/>
       </Routes>
       

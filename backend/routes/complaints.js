@@ -3,6 +3,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const Complaint = require('../models/Complaint');
+const auth = require('../middleware/auth');
+
 
 const router = express.Router();
 
@@ -31,8 +33,27 @@ const upload = multer({
   },
 });
 
+const jwt = require('jsonwebtoken');
+
+// ...
+
 router.post('/', upload.single('photo'), async (req, res) => {
   try {
+    // Check for auth token manually for optional user tracking
+    let userId = undefined;
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.slice(7);
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        userId = decoded.userId;
+      } catch (err) {
+        console.warn('Invalid token during complaint registration:', err.message);
+        // Continue as guest
+      }
+    }
+
+
     const {
       title,
       category,
@@ -64,8 +85,9 @@ router.post('/', upload.single('photo'), async (req, res) => {
       contactPhone,
       contactEmail,
       photoUrl,
-      submittedBy: req.user ? req.user.userId : undefined,
+      submittedBy: userId,
     });
+
 
     res
       .status(201)
@@ -78,6 +100,17 @@ router.post('/', upload.single('photo'), async (req, res) => {
         .json({ message: error.message || 'File upload failed' });
     }
     res.status(500).json({ message: 'Failed to register complaint', error: error.message });
+  }
+});
+
+router.get('/my-complaints', auth, async (req, res) => {
+  try {
+    const complaints = await Complaint.find({ submittedBy: req.user.userId })
+      .sort({ createdAt: -1 });
+    res.json({ complaints });
+  } catch (error) {
+    console.error('Error fetching user complaints:', error);
+    res.status(500).json({ message: 'Failed to fetch your complaints' });
   }
 });
 

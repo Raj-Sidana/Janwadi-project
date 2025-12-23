@@ -142,8 +142,9 @@ const Navbar = () => {
               {/* <span className="cursor-pointer">Home</span> */}
               <Link to='/home' onClick={() => setIsMenuOpen(false)} className="no-underline block w-full text-center py-2"><span className="cursor-pointer">Home</span></Link>
               <span className="cursor-pointer">About</span>
-              <span className="cursor-pointer">Problem Status</span>
+              <Link to='/ProblemStatus' onClick={() => setIsMenuOpen(false)}><span className="cursor-pointer">Problem Status</span></Link>
               <Link to='/RegisterProblem' onClick={() => setIsMenuOpen(false)}><span className="cursor-pointer">Register Problem</span></Link>
+
               <span className="cursor-pointer">Contact</span>
               <div className="flex items-center gap-2">
                 {isAuthenticated ? (

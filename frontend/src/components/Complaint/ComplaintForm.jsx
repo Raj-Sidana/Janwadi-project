@@ -159,8 +159,15 @@ export default function ComplaintForm() {
           complaintData.append("photo", formData.photo);
         }
 
+        const token = localStorage.getItem("token");
+        const headers = {};
+        if (token) {
+          headers["Authorization"] = `Bearer ${token}`;
+        }
+
         const response = await fetch(`${API_BASE_URL}/api/complaints`, {
           method: "POST",
+          headers: headers, // Pass headers here. Note: body is FormData, so don't set Content-Type, browser sets it with boundary.
           body: complaintData,
         });
 
