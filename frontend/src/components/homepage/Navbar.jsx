@@ -113,7 +113,7 @@ const Navbar = () => {
         <Link to='/About' className="hover:text-indigo-900 transition-colors cursor-pointer no-underline">About</Link>
         <Link to='/ProblemStatus' className="hover:text-indigo-900 transition-colors cursor-pointer no-underline">Problem Status</Link>
         <Link to='/RegisterProblem' className="hover:text-indigo-900 transition-colors cursor-pointer no-underline">Register Problem</Link>
-        <Link to='/Contact' className="hover:text-indigo-900 transition-colors cursor-pointer no-underline">Contact</Link>
+        
         {/* <span className="cursor-pointer">Home</span>
         <span className="cursor-pointer">About</span>
         <span className="cursor-pointer">Problem Status</span>
@@ -141,11 +141,11 @@ const Navbar = () => {
             <div className="flex flex-col items-center gap-4 py-4 text-gray-900 font-semibold">
               {/* <span className="cursor-pointer">Home</span> */}
               <Link to='/home' onClick={() => setIsMenuOpen(false)} className="no-underline block w-full text-center py-2"><span className="cursor-pointer">Home</span></Link>
-              <span className="cursor-pointer">About</span>
+              <Link to='/About' onClick={() => setIsMenuOpen(false)} className="no-underline block w-full text-center py-2"><span className="cursor-pointer">About</span></Link>
               <Link to='/ProblemStatus' onClick={() => setIsMenuOpen(false)}><span className="cursor-pointer">Problem Status</span></Link>
               <Link to='/RegisterProblem' onClick={() => setIsMenuOpen(false)}><span className="cursor-pointer">Register Problem</span></Link>
 
-              <span className="cursor-pointer">Contact</span>
+    
               <div className="flex items-center gap-2">
                 {isAuthenticated ? (
                   <ProfileBadge />
