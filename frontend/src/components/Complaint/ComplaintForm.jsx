@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import MapSelector from "./MapSelector";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -14,6 +15,8 @@ export default function ComplaintForm() {
     contactPhone: "",
     contactEmail: "",
     photo: null,
+    latitude: "",
+    longitude: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -30,6 +33,20 @@ export default function ComplaintForm() {
     { value: "sanitation", label: "Sanitation" },
     { value: "other", label: "Other" },
   ];
+
+  const handleLocationChange = useCallback((location) => {
+    setFormData((prev) => ({
+      ...prev,
+      latitude: location.latitude,
+      longitude: location.longitude,
+    }));
+    if (errors.location) {
+      setErrors((prev) => ({
+        ...prev,
+        location: "",
+      }));
+    }
+  }, [errors.location]);
 
   const validateEmail = (email) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -127,6 +144,11 @@ export default function ComplaintForm() {
       newErrors.pincode = "Please enter a valid 6-digit pincode";
     }
 
+    // Validate Location selection
+    if (!formData.latitude || !formData.longitude) {
+      newErrors.location = "Please select the complaint location on the map";
+    }
+
     // Validate Contact Phone (optional but if provided must be valid)
     if (formData.contactPhone && !validateMobile(formData.contactPhone)) {
       newErrors.contactPhone = "Please enter a valid 10-digit mobile number";
@@ -153,6 +175,8 @@ export default function ComplaintForm() {
         complaintData.append("city", formData.city);
         complaintData.append("address", formData.address);
         complaintData.append("pincode", formData.pincode);
+        complaintData.append("latitude", formData.latitude);
+        complaintData.append("longitude", formData.longitude);
         complaintData.append("contactPhone", formData.contactPhone);
         complaintData.append("contactEmail", formData.contactEmail);
         if (formData.photo) {
@@ -193,6 +217,8 @@ export default function ComplaintForm() {
           contactPhone: "",
           contactEmail: "",
           photo: null,
+          latitude: "",
+          longitude: "",
         });
         setPhotoPreview(null);
       } catch (error) {
@@ -395,6 +421,32 @@ export default function ComplaintForm() {
           </div>
         </div>
 
+        {/* Location Selector */}
+        <div className="mb-4 sm:mb-5">
+          <label className="block mb-1 sm:mb-2 text-xs sm:text-sm font-semibold text-gray-700">
+            Location <span className="text-red-500">*</span>
+          </label>
+          <p className="text-xs sm:text-sm text-gray-500 mb-2">
+            The map will show your current location by default. You can drag the marker or click on the map to select a different location.
+          </p>
+          <MapSelector
+            location={
+              formData.latitude && formData.longitude
+                ? { latitude: Number(formData.latitude), longitude: Number(formData.longitude) }
+                : null
+            }
+            onChange={handleLocationChange}
+          />
+          {formData.latitude && formData.longitude && (
+            <p className="text-sm text-gray-600 mt-2">
+              Selected coordinates: {Number(formData.latitude).toFixed(5)}, {Number(formData.longitude).toFixed(5)}
+            </p>
+          )}
+          {errors.location && (
+            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.location}</p>
+          )}
+        </div>
+
         {/* Photo Upload */}
         <div className="mb-5 sm:mb-6">
           <label className="block mb-1 sm:mb-2 text-xs sm:text-sm font-semibold text-gray-700">
@@ -453,6 +505,8 @@ export default function ComplaintForm() {
                 contactPhone: "",
                 contactEmail: "",
                 photo: null,
+                latitude: "",
+                longitude: "",
               });
               setPhotoPreview(null);
               setErrors({});

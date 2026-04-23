@@ -64,10 +64,21 @@ router.post('/', upload.single('photo'), async (req, res) => {
       pincode,
       contactPhone,
       contactEmail,
+      latitude,
+      longitude,
     } = req.body;
 
-    if (!title || !category || !description || !state || !city || !address || !pincode) {
+    if (!title || !category || !description || !state || !city || !address || !pincode || !latitude || !longitude) {
       return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    const lat = parseFloat(latitude);
+    const lng = parseFloat(longitude);
+    if (Number.isNaN(lat) || lat < -90 || lat > 90) {
+      return res.status(400).json({ message: 'Invalid latitude' });
+    }
+    if (Number.isNaN(lng) || lng < -180 || lng > 180) {
+      return res.status(400).json({ message: 'Invalid longitude' });
     }
 
     const photoUrl = req.file
@@ -82,6 +93,7 @@ router.post('/', upload.single('photo'), async (req, res) => {
       city,
       address,
       pincode,
+      location: { latitude: lat, longitude: lng },
       contactPhone,
       contactEmail,
       photoUrl,

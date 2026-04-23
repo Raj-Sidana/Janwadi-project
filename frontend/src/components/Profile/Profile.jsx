@@ -31,10 +31,6 @@ export default function Profile() {
     ...initialFormState,
     ...(storedUser || {}),
   }));
-  const [originalData, setOriginalData] = useState(() => ({
-    ...initialFormState,
-    ...(storedUser || {}),
-  }));
   const [isLoading, setIsLoading] = useState(true);
   const [savingField, setSavingField] = useState(null);
   const [editingField, setEditingField] = useState(null);
@@ -45,7 +41,7 @@ export default function Profile() {
   const parseJsonResponse = async (response) => {
     try {
       return await response.clone().json();
-    } catch (jsonError) {
+    } catch {
       const text = await response.text();
       const statusLabel = `${response.status} ${response.statusText || ""}`.trim();
 
@@ -97,7 +93,6 @@ export default function Profile() {
           pincode: data.user?.pincode || "",
         };
         setFormData(userData);
-        setOriginalData(userData);
       } catch (error) {
         console.error("Error fetching profile:", error);
       } finally {
@@ -203,7 +198,6 @@ export default function Profile() {
         pincode: data.user?.pincode || "",
       };
       setFormData(updatedData);
-      setOriginalData(updatedData);
       setMessage({
         type: "success",
         text: data.message || "Profile updated successfully",

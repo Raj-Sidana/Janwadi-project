@@ -46,6 +46,13 @@ const complaintSchema = new mongoose.Schema({
     required: true,
     match: /^[0-9]{6}$/,
   },
+  location: {
+    type: {
+      latitude: { type: Number, required: true },
+      longitude: { type: Number, required: true },
+    },
+    required: true,
+  },
   contactPhone: {
     type: String,
     trim: true,
