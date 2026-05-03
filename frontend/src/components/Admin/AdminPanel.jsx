@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../homepage/Navbar";
+import MapViewer from "../Complaint/MapViewer";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -116,6 +117,37 @@ export default function AdminPanel() {
     } catch (err) {
       console.error("Error updating priority:", err);
       alert(err.message || "Failed to update priority");
+    }
+  };
+
+  const deleteComplaint = async (complaintId) => {
+    if (!window.confirm("Are you sure you want to delete this complaint?")) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `${API_BASE_URL}/api/admin/complaints/${complaintId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete complaint");
+      }
+
+      await fetchComplaints();
+      if (selectedComplaint?._id === complaintId) {
+        setSelectedComplaint(null);
+      }
+    } catch (err) {
+      console.error("Error deleting complaint:", err);
+      alert(err.message || "Failed to delete complaint");
     }
   };
 
@@ -270,6 +302,15 @@ export default function AdminPanel() {
                             >
                               View
                             </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteComplaint(complaint._id);
+                              }}
+                              className="ml-4 text-red-600 hover:text-red-800 text-sm font-medium"
+                            >
+                              Delete
+                            </button>
                           </td>
                         </tr>
                       ))
@@ -314,6 +355,12 @@ export default function AdminPanel() {
                     <p className="text-gray-600 text-sm">
                       {selectedComplaint.address} - {selectedComplaint.pincode}
                     </p>
+                    {selectedComplaint.location && (
+                      <div className="mt-3">
+                        <p className="text-sm font-medium text-gray-700 mb-2">Location on Map</p>
+                        <MapViewer location={selectedComplaint.location} />
+                      </div>
+                    )}
                   </div>
 
                   {selectedComplaint.submittedBy && (
@@ -423,6 +470,18 @@ export default function AdminPanel() {
                         Urgent
                       </button>
                     </div>
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <p className="text-sm font-medium text-gray-700 mb-3">
+                      Delete Complaint
+                    </p>
+                    <button
+                      onClick={() => deleteComplaint(selectedComplaint._id)}
+                      className="w-full px-3 py-2 bg-red-100 text-red-800 rounded text-sm hover:bg-red-200"
+                    >
+                      Remove Complaint
+                    </button>
                   </div>
 
                   <div className="text-xs text-gray-500 pt-4 border-t">

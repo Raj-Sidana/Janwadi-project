@@ -71,6 +71,21 @@ router.patch('/complaints/:id/priority', adminAuth, async (req, res) => {
   }
 });
 
+// Delete complaint
+router.delete('/complaints/:id', adminAuth, async (req, res) => {
+  try {
+    const complaint = await Complaint.findByIdAndDelete(req.params.id);
+    if (!complaint) {
+      return res.status(404).json({ message: 'Complaint not found' });
+    }
+
+    res.json({ message: 'Complaint deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting complaint:', error);
+    res.status(500).json({ message: 'Failed to delete complaint' });
+  }
+});
+
 // Get complaint by ID
 router.get('/complaints/:id', adminAuth, async (req, res) => {
   try {
