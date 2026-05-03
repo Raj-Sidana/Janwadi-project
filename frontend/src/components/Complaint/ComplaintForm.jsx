@@ -237,7 +237,7 @@ export default function ComplaintForm() {
     <div className="w-full max-w-2xl md:max-w-3xl mx-auto">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-lg w-full"
+        className={`bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-lg w-full ${successInfo ? 'hidden' : ''}`}
       >
         <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6 text-gray-800">
           Register Your Complaint
